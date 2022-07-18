@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "miniature-tribble"
+version = "0.1.0"
+description = "Reproduce issue with VSCode Python Extension"
+authors = ["Andrew Hebert Jr. <ahebert@nvidia.com>"]
+license = "MIT License"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pytest = "^7.1.2"
+typer = "^0.6.1"
+PyYAML = "^6.0"
+black = "^22.6.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
