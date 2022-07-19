@@ -1,4 +1,7 @@
-import pytest
+# Code based on excerpts from https://docs.pytest.org/en/7.1.x/example/nonpython.html
+import pytest, os
+
+FIX_CODE = bool(os.environ["FIX_CODE"]) if "FIX_CODE" in os.environ else False
 
 
 def pytest_collect_file(parent, file_path):
@@ -16,9 +19,15 @@ class YamlFile(pytest.File):
             yield YamlItem.from_parent(self, name=name, spec=spec)
 
 
-class YamlItem(pytest.Item):
+YamlParent = pytest.Function if FIX_CODE else pytest.Item
+
+
+class YamlItem(YamlParent):  # type: ignore
     def __init__(self, *, spec, **kwargs):
-        super().__init__(**kwargs)
+        if FIX_CODE:
+            super().__init__(callobj=self.runtest, **kwargs)  # type: ignore
+        else:
+            super().__init__(**kwargs)
         self.spec = spec
 
     def runtest(self):
@@ -39,7 +48,7 @@ class YamlItem(pytest.Item):
             )
 
     def reportinfo(self):
-        return self.path, 0, f"usecase: {self.name}"
+        return self.path, 0, f"{self.name}"
 
 
 class YamlException(Exception):
